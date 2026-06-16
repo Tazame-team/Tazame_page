@@ -15,4 +15,9 @@ body {
   --color-primary-light: #009ee3;
   --color-secondary-light: #ee0000;
 
+
+
+
+  --font-knockout: var(--font-knockout);
+
 }

@@ -13,7 +13,6 @@ const Card_paquetes = ({
 
       <div className={`relative flex h-1/2 flex-col justify-end ${bg} p-4`}>
 
-
         <div className="absolute top-3 left-3 rounded-lg bg-white px-3 py-2 shadow">
           <p className="text-sm text-gray-700">{presencia}</p>
         </div>

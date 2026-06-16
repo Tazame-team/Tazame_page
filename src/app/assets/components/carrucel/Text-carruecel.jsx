@@ -30,9 +30,9 @@ const TextCarousel = () => {
                     <motion.span className={`text-lg font-bold   ${i % 2 === 0 ? "text-primary-light" : "text-secondary-light"}`} key={i}>
 
                         <div className="flex flex-row justify-center items-center gap-2">
-                            <TbAtom2Filled />
+                            -
                             {item}
-                            <TbAtom2Filled />
+                            -
                         </div>
 
 
