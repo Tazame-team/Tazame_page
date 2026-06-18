@@ -4,20 +4,24 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function useTransitionRouter() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
-  const push = (href) => {
-    setLoading(true);
+    const push = (href) => {
+        if (!href) return;
 
-    setTimeout(() => {
-      router.push(href);
-    }, 300); // delay antes de cambiar página
+        setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
+        // tiempo antes de cambiar de página
+        setTimeout(() => {
+            router.push(href);
+        }, 150);
 
-  return { push, loading };
+        //duración total de la animacion
+        setTimeout(() => {
+            setLoading(false);
+        }, 3000);
+    };
+
+    return { push, loading };
 }

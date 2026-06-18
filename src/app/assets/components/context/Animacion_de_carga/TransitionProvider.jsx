@@ -27,9 +27,9 @@ export default function TransitionProvider({ children }) {
     setShow(true);
     setLoading(true);
 
-    setTimeout(() => {
+    setTimeout(() => { //tiempo a espera para cambiar de pagina
       router.push(href);
-    }, 150);
+    }, 600);
 
     setTimeout(() => {
       setLoading(false);
