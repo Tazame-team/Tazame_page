@@ -25,7 +25,7 @@ const Navbar = ({ absolute = false }) => {
   ];
 
   return (
-    <div className={`w-full z-50 top-0 ${absolute ? "absolute" : "sticky"} bg-white ${IsActive ? "" : "h-20"} flex flex-col`}>
+    <div className={`w-full z-100 top-0 ${absolute ? "absolute" : "sticky"} bg-white ${IsActive ? "" : "h-20"} flex flex-col`}>
       <div id="subnavbar" className={`p-1 grid grid-cols-2 ${IsActive ? "h-20" : "h-full"}`}>
         <div className="flex justify-start items-center md:pl-8">
           <div onClick={() => redirect("/")} className="hidden md:flex w-40 h-full cursor-pointer">

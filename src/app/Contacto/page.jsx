@@ -4,8 +4,11 @@ import { useState } from "react";
 
 import { FaPhoneAlt } from "react-icons/fa";
 import { PiBuildingOfficeFill } from "react-icons/pi";
+
 import { FaClock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { RiErrorWarningFill } from "react-icons/ri";
+import { GrStatusGood } from "react-icons/gr";
 
 import General_button from "../assets/components/buttons/general_button/General_button ";
 import General_input from "../assets/components/inputs/General_input";
@@ -49,12 +52,15 @@ const Minicards = ({
 
 
 
+
 const Contacto = () => {
     const [formulario, setFormulario] = useState({
         nombre: "",
         correo: "",
         telefono: "",
         mensaje: "",
+        time: new Date(),
+        secret: ""
     });
 
 
@@ -64,9 +70,69 @@ const Contacto = () => {
         formulario.telefono.trim() &&
         formulario.mensaje.trim();
 
-    const enviarFormulario = (e) => {
+
+    const [loading, setloading] = useState(false);
+
+    const [message, setmessage] = useState({
+        mensaje: "",
+        status: null
+    });
+
+
+    const vaciar = () => {
+        setFormulario({
+            nombre: "",
+            correo: "",
+            telefono: "",
+            mensaje: "",
+            time: Date.now(),
+            secret: "",
+        });
+    };
+
+    const vaciar_POST = () => {
+        setmessage({
+            mensaje: "",
+            status: null
+        })
+
+    }
+
+    const enviarFormulario = async (e) => {
         e.preventDefault();
-        console.log(formulario);
+        try {
+
+            vaciar_POST();
+            setloading(true);
+
+            const response = await fetch("/Api/Contacto/Send_message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formulario),
+            });
+
+            const Actual_message = await response.json();
+
+            setmessage({ mensaje: Actual_message.message, status: Actual_message.status });
+
+            vaciar();
+            setloading(false);
+
+
+        } catch (error) {
+
+            console.debug(error);
+
+            setmessage({
+                mensaje: "Ocurrió un error al enviar el mensaje",
+                status: false,
+            });
+
+            setloading(false);
+
+        }
     };
 
 
@@ -82,10 +148,10 @@ const Contacto = () => {
                 </div>
             </div>
 
-            <div className="relative w-full  -z-10  py-10  bg-white">
+            <div className=" w-full  -z-10  py-10  bg-white">
 
 
-                <div id="imagenbg" className="hidden absolute inset-0 bg-amber-400 scale-y-104">
+                <div id="imagenbg" className="hidden absolute inset-0  scale-y-104">
 
                     <div className="relative h-full w-full">
                         <Next_image src={"/images/pictures/Principal image.jpeg"} object="object-fill backdrop-blur-2xl" />
@@ -97,7 +163,7 @@ const Contacto = () => {
 
                 </div>
 
-                <div className="flex justify-center w-full relative z-50">
+                <div className="relative flex justify-center w-full  z-50">
 
                     <div className="w-full flex flex-col  md:flex-row justify-center items-start  gap-6 max-w-7xl p-4">
 
@@ -118,6 +184,7 @@ const Contacto = () => {
                                         <General_input
                                             title={"Nombre:"}
                                             value={formulario.nombre}
+                                            maxLenght={50}
                                             setvalue={(valor) =>
                                                 setFormulario({
                                                     ...formulario,
@@ -132,6 +199,7 @@ const Contacto = () => {
 
                                         <General_input
                                             title={"Correo:"}
+                                            maxLenght={50}
                                             value={formulario.correo}
                                             setvalue={(valor) =>
                                                 setFormulario({
@@ -151,6 +219,8 @@ const Contacto = () => {
                                     <General_input
 
                                         title={"Teléfono:"}
+                                        tipo="tel"
+                                        maxLenght={15}
                                         value={formulario.telefono}
                                         setvalue={(valor) =>
                                             setFormulario({
@@ -175,7 +245,31 @@ const Contacto = () => {
                                         }
                                         multiline={true}
                                         rows={5}
+                                        maxLenght={350}
+
                                         placeholder="Tu mensaje"
+                                    />
+                                </div>
+
+
+
+
+                                <div className="hidden w-full  flex-col">
+
+                                    <General_input
+                                        title={"Secret:"}
+                                        value={formulario.mensaje}
+                                        setvalue={(valor) =>
+                                            setFormulario({
+                                                ...formulario,
+                                                secret: valor,
+                                            })
+                                        }
+                                        multiline={true}
+                                        rows={5}
+                                        maxLenght={350}
+
+                                        placeholder="Secret"
                                     />
                                 </div>
 
@@ -183,9 +277,30 @@ const Contacto = () => {
                                     <General_button
                                         type="submit"
                                         disable={!formularioCompleto}
-                                        texto="Enviar"
+                                        loading={loading}
+                                        texto="Enviar mensaje"
                                     />
                                 </div>
+
+
+                                {message.mensaje && (
+
+                                    <div className={`relative w-full ${message.status ? "text-primary-light" : "text-secondary-light"} text-center z-10 transition-all duration-150 flex flex-row justify-center items-center gap-2`}>
+
+                                        <div className="inset-0 bg-red-400">
+
+                                        </div>
+
+                                        {message.mensaje}
+
+                                        {message.status ? (
+                                            <GrStatusGood />
+                                        ) : (
+                                            <RiErrorWarningFill />
+                                        )}
+                                    </div>
+                                )}
+
                             </form>
                         </div>
 
@@ -194,8 +309,7 @@ const Contacto = () => {
 
 
 
-                        <div
-                            id="informacion"
+                        <div id="informacion"
                             className="w-full md:w-1/2 p-6 bg-white flex flex-col justify-center items-center gap-4 "
                         >
 
@@ -230,7 +344,7 @@ const Contacto = () => {
 
 
                                 <div className="w-full col-span-1 row-span-1  ">
-                                    <Minicards icon={<FaPhoneAlt />} subTitle={"8:00 AM - 7:00 PM"} title={"Horario"} color="text-secondary-light bg-secondary-light/20" text="text-secondary-light" />
+                                    <Minicards icon={<FaClock />} subTitle={"8:00 AM - 7:00 PM"} title={"Horario"} color="text-secondary-light bg-secondary-light/20" text="text-secondary-light" />
                                 </div>
 
                                 <div className="w-full col-span-1 row-span-1  ">
